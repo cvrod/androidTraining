@@ -3,8 +3,10 @@ package com.excilys.formation.parlezvous.exos;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     //Getting class name
@@ -49,5 +51,15 @@ public class MainActivity extends AppCompatActivity {
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Log.i(TAG, "onRestoreInstanceState !");
+    }
+
+    //Reset user/password textfield
+    public void flushButtonMethod(View view) {
+        usernameField.setText("");
+        passwordField.setText("");
+    }
+    
+    public void sendButtonMethod(View view) {
+        Toast.makeText(this, "Toast !", Toast.LENGTH_SHORT).show();
     }
 }

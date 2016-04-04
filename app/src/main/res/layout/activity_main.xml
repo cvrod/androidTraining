@@ -77,7 +77,8 @@
             android:text="@string/flushButton"
             android:layout_weight="1"
             android:layout_marginLeft="5dip"
-            android:layout_marginRight="5dip" />
+            android:layout_marginRight="5dip"
+            android:onClick="flushButtonMethod"/>
         <Button
             android:id="@+id/envoyerButton"
             android:layout_width="wrap_content"
@@ -85,6 +86,7 @@
             android:text="@string/sendButton"
             android:layout_weight="1"
             android:layout_marginLeft="5dip"
-            android:layout_marginRight="5dip" />
+            android:layout_marginRight="5dip"
+            android:onClick="sendButtonMethod"/>
     </LinearLayout>
 </RelativeLayout>
