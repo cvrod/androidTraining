@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Exos</string>
+    <string name="textHeader">Formulaire de connexion</string>
+    <string name="userLabel">Nom d\'utilisateur :</string>
+    <string name="passwordLabel">Mot de passe :</string>
+    <string name="flushButton">Vider</string>
+    <string name="sendButton">Envoyer</string>
+</resources>
