@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText passwordField;
     private Button flushButton;
     private Button sendButton;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,23 @@ public class MainActivity extends AppCompatActivity {
 
         flushButton = (Button) findViewById(R.id.viderButton);
         sendButton = (Button) findViewById(R.id.envoyerButton);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
+
+    //Getters
+    public ProgressBar getProgressBar(){
+        return this.progressBar;
+    }
+
+    public String getUsername(){
+        return this.usernameField.getText().toString();
+    }
+
+    public String getPassword(){
+        return this.passwordField.getText().toString();
+    }
+
 
     protected void onDestroy() {
         super.onDestroy();
@@ -58,8 +76,11 @@ public class MainActivity extends AppCompatActivity {
         usernameField.setText("");
         passwordField.setText("");
     }
-    
+
+    //Sending logs
     public void sendButtonMethod(View view) {
         Toast.makeText(this, "Toast !", Toast.LENGTH_SHORT).show();
+        ParlezVousTask task = new ParlezVousTask(this);
+        task.execute();
     }
 }
