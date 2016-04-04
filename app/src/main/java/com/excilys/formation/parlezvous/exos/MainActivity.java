@@ -1,5 +1,6 @@
 package com.excilys.formation.parlezvous.exos;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,14 +10,21 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 public class MainActivity extends AppCompatActivity {
     //Getting class name
     private final String TAG = MainActivity.class.getSimpleName();
+
     private EditText usernameField;
     private EditText passwordField;
+
     private Button flushButton;
     private Button sendButton;
+
     private ProgressBar progressBar;
+
+    private boolean identificationSuccess = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
         return this.passwordField.getText().toString();
     }
 
+    //Setters
+    public void setIdentificationSuccess(boolean b){
+        this.identificationSuccess = b;
+    }
 
     protected void onDestroy() {
         super.onDestroy();
@@ -82,5 +94,18 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Toast !", Toast.LENGTH_SHORT).show();
         ParlezVousTask task = new ParlezVousTask(this);
         task.execute();
+        try {
+            boolean result = (boolean) task.get();
+            Log.i(TAG, "Result from ParlezVousTask : " + result);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        Intent intent = new Intent(MainActivity.this, ConnectedActivity.class);
+        intent.putExtra("user", usernameField.getText().toString());
+        startActivity(intent);
+
     }
 }
