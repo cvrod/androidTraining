@@ -1,6 +1,8 @@
 package com.excilys.formation.parlezvous.exos;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends AppCompatActivity {
     //Getting class name
     private final String TAG = MainActivity.class.getSimpleName();
+    public static final String PREFS_NAME = "PrefsFile";
 
     private EditText usernameField;
     private EditText passwordField;
@@ -25,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private boolean identificationSuccess = false;
+
+    private SMSReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,19 @@ public class MainActivity extends AppCompatActivity {
         sendButton = (Button) findViewById(R.id.envoyerButton);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        //Setting user/password from SharedPreferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String user = settings.getString("user", "");
+        String password = settings.getString("password", "");
+
+        usernameField.setText(user);
+        passwordField.setText(password);
+
+        //SMS Receiver
+        IntentFilter filter1 = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+        receiver = new SMSReceiver();
+        registerReceiver(receiver, filter1);
     }
 
     //Getters
@@ -60,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(receiver);
         Log.i(TAG, "onDestroy !");
     }
 
@@ -94,8 +113,9 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Toast !", Toast.LENGTH_SHORT).show();
         ParlezVousTask task = new ParlezVousTask(this);
         task.execute();
+        boolean result = false;
         try {
-            boolean result = (boolean) task.get();
+            result = (boolean) task.get();
             Log.i(TAG, "Result from ParlezVousTask : " + result);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -103,9 +123,19 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Intent intent = new Intent(MainActivity.this, ConnectedActivity.class);
-        intent.putExtra("user", usernameField.getText().toString());
-        startActivity(intent);
+        //if ParlezVousTask return true -> login exist
+        if(result) {
+            //Putting user/password in Preferences
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("user", this.getUsername());
+            editor.putString("password", this.getPassword());
+            editor.commit();
+
+            Intent intent = new Intent(MainActivity.this, ConnectedActivity.class);
+            intent.putExtra("user", usernameField.getText().toString());
+            startActivity(intent);
+        }
 
     }
 }

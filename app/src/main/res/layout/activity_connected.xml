@@ -16,4 +16,10 @@
         android:layout_marginTop="47dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <com.excilys.formation.parlezvous.exos.ParlezVousView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/userLogin"
+        android:background="@android:color/white" />
 </RelativeLayout>
